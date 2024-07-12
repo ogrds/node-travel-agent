@@ -115,7 +115,7 @@ export const lambdaHandler = async (event: any, context: any) => {
 
   if (!query) return { body: "Missing question", status: 400 };
 
-  const response = await getResponse(query, llm);
+  const response = (await getResponse(query, llm)).content;
 
   return {
     body: response,
