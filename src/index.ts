@@ -20,9 +20,6 @@ const llm = new ChatOpenAI({
   model: "gpt-3.5-turbo",
 });
 
-const query =
-  "Vou viajar para Viena em Novembro de 2024. Quero que faça um roteiro de viagem para mim com os eventos que irão ocorrer na cidade na data da viagem, citando os melhores dias para ir em cada local, com o valor do transporte público para os eventos e com o preço das passagens aéreas de Brasília para Viena.";
-
 async function researchAgent(query: string, llm: ChatOpenAI) {
   const tools = [new DuckDuckGoSearch(), new WikipediaQueryRun()];
   const prompt = await hub.pull<ChatPromptTemplate>("hwchase17/react");
@@ -113,8 +110,11 @@ async function getResponse(query: string, llm: ChatOpenAI) {
   return response;
 }
 
-const lambdaHandler = async (event: any, context: any) => {
-  const query = event.get("question");
+export const lambdaHandler = async (event: any, context: any) => {
+  const query = event?.question;
+
+  if (!query) return { body: "Missing question", status: 400 };
+
   const response = await getResponse(query, llm);
 
   return {
