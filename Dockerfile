@@ -7,11 +7,11 @@ RUN microdnf update -y && microdnf install -y gcc-c++ make
 # Copy the package.json and package-lock.json  
 COPY package*.json ${LAMBDA_TASK_ROOT}
 
-# Copy the source code
-COPY dist/index.js ${LAMBDA_TASK_ROOT}
-
 # Install the dependencies
 RUN npm install
+
+# Copy the source code
+COPY index.js ${LAMBDA_TASK_ROOT}
 
 # Remove dev dependencies
 RUN npm prune --production
